@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+    "github.com/samthom/glox/lib"
 )
 
 type glox struct {
@@ -68,6 +69,8 @@ func (g *glox) runPrompt() {
 
 func (g *glox) run(source string) {
     // scanner
+    scanner := lib.NewScanner(source)
+    scanner.ScanTokens()
 }
 
 func (g *glox) error(line int, message string) {

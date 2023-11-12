@@ -1,6 +1,8 @@
-package main
+package lib
 
-import "strconv"
+import (
+	"strconv"
+)
 
 var keywords = map[string]TokenType{
 	"and":    AND,
@@ -144,8 +146,9 @@ func (s *scanner) scanToken() {
 }
 
 func (s *scanner) advance() string {
+    v := s.source[s.current];
 	s.current++
-	return string(s.source[s.current]) // going out on a limb and only expecting ASCII characters
+	return string(v) // going out on a limb and only expecting ASCII characters
 }
 
 func (s *scanner) add(tknType TokenType) {
