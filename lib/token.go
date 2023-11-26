@@ -61,6 +61,7 @@ type token struct {
 
 type Token interface {
 	ToString() string
+    Lexeme() string
 }
 
 func NewToken(tkntype TokenType, lexeme string, literal interface{}, line int) Token {
@@ -69,4 +70,8 @@ func NewToken(tkntype TokenType, lexeme string, literal interface{}, line int) T
 
 func (t *token) ToString() string {
 	return fmt.Sprintf("%s %s %s", t.tkntype, t.lexeme, t.literal)
+}
+
+func (t *token) Lexeme() string {
+    return t.lexeme
 }

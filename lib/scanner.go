@@ -139,7 +139,7 @@ func (s *scanner) scanToken() {
 		} else if isAlpha(c) {
 			s.identifier()
 		} else {
-			glx.error(s.line, "Unexpected character.")
+			// glx.error(s.line, "Unexpected character.")
 		}
 		break
 	}
@@ -194,7 +194,7 @@ func (s *scanner) string() {
 	}
 
 	if s.isAtEnd() {
-		glx.error(s.line, "Unterminated string.")
+		// glx.error(s.line, "Unterminated string.")
 	} else {
 		s.advance()
 		value := s.source[s.start+1 : s.current-1]

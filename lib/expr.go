@@ -1,23 +1,48 @@
 package lib
 
-type Expr interface{}
+type Expr interface {
+    Accept(ExpressionVisitor) any
+}
 
-type Binary  struct {
-    left  Expr
-    operator  Token
-    right  Expr
+type ExpressionVisitor interface {
+    VisitBinary(*Binary) any
+    VisitGrouping(*Grouping) any
+    VisitLiteral(*Literal) any
+    VisitUnary(*Unary) any
+}
+
+type Binary struct {
+    Left  Expr
+    Operator  Token
+    Right  Expr
+}
+
+func (e *Binary) Accept(v ExpressionVisitor) any {
+    return v.VisitBinary(e)
 }
 
 type Grouping struct {
-    expression  Expr
+    Expression  Expr
+}
+
+func (e *Grouping) Accept(v ExpressionVisitor) any {
+    return v.VisitGrouping(e)
 }
 
 type Literal struct {
-    value  interface{}
+    Value  interface{}
+}
+
+func (e *Literal) Accept(v ExpressionVisitor) any {
+    return v.VisitLiteral(e)
 }
 
 type Unary struct {
-    operator  Token
-    right  Expr
+    Operator  Token
+    Right  Expr
+}
+
+func (e *Unary) Accept(v ExpressionVisitor) any {
+    return v.VisitUnary(e)
 }
 
