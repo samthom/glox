@@ -29,6 +29,7 @@ type scanner struct {
 	start   int
 	current int
 	line    int
+	glx     Glox
 }
 
 type Scanner interface {
@@ -36,9 +37,9 @@ type Scanner interface {
 	isAtEnd() bool
 }
 
-func NewScanner(source string) Scanner {
+func NewScanner(source string, glx Glox) Scanner {
 	list := []Token{}
-	return &scanner{source, list, 0, 0, 1}
+	return &scanner{source, list, 0, 0, 1, glx}
 }
 
 func (s *scanner) ScanTokens() {
@@ -139,14 +140,14 @@ func (s *scanner) scanToken() {
 		} else if isAlpha(c) {
 			s.identifier()
 		} else {
-			// glx.error(s.line, "Unexpected character.")
+			s.glx.Error(s.line, "Unexpected character.")
 		}
 		break
 	}
 }
 
 func (s *scanner) advance() string {
-    v := s.source[s.current];
+	v := s.source[s.current]
 	s.current++
 	return string(v) // going out on a limb and only expecting ASCII characters
 }
@@ -194,7 +195,7 @@ func (s *scanner) string() {
 	}
 
 	if s.isAtEnd() {
-		// glx.error(s.line, "Unterminated string.")
+		s.glx.Error(s.line, "Unterminated string.")
 	} else {
 		s.advance()
 		value := s.source[s.start+1 : s.current-1]
