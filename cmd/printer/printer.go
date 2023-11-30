@@ -12,7 +12,7 @@ func main() {
         Left: &lib.Unary{
             Operator: lib.NewToken(lib.MINUS, "-", nil, 1),
             Right: &lib.Literal{
-                Value: 123.00,
+                Value: 123,
             },
         },
         Operator: lib.NewToken(lib.STAR, "*", nil, 1),
