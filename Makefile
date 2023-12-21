@@ -2,6 +2,7 @@
 export GO111MODULE=on
 
 GO_CMD=go
+GO_RUN=$(GO_CMD) run
 GO_GET=$(GO_CMD) get -v
 GO_BUILD=$(GO_CMD) build
 GO_BUILD_RACE=$(GO_CMD) build -race
@@ -12,7 +13,9 @@ GO_INSTALL=$(GO_CMD) install -v
 
 BIN=glox
 DIR=.
-MAIN=glox.go
+MAIN=./cmd/glox/glox.go
+AST=./cmd/gen_ast/ast.go
+AST_PKG=lib
 
 SOURCE_PKG_DIR= .
 SOURCEDIR=.
@@ -39,3 +42,7 @@ run:
 
 format:
 	for f in `find . -name '*.go'`; do go fmt $f; done
+
+ast:
+	@echo "==> Building ast file ...";
+	@$(GO_RUN) $(DIR)/$(AST) $(DIR)/$(AST_PKG) $(AST_PKG)
