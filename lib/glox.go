@@ -17,6 +17,7 @@ type Glox interface {
 	Run(string)
 	Error(int, string)
 	Report(int, string, string)
+	ParseError(Token, string)
 }
 
 func NewGlox() Glox {
@@ -52,11 +53,29 @@ func (g *glox) RunPrompt() {
 func (g *glox) Run(source string) {
 	// scanner
 	scanner := NewScanner(source, g)
-	scanner.ScanTokens()
+	tokens := scanner.ScanTokens()
+
+	parser := NewParser(tokens, g)
+	expression := parser.Parse()
+
+	if g.hadError {
+		return
+	}
+
+	printer := NewPrinter()
+	fmt.Println(printer.Print(expression))
 }
 
 func (g *glox) Error(line int, message string) {
 	g.Report(line, "", message)
+}
+
+func (g *glox) ParseError(token Token, message string) {
+	if token.Type() == EOF {
+		g.Report(token.Line(), " at end", message)
+	} else {
+		g.Report(token.Line(), "at '"+token.Lexeme()+"'", message)
+	}
 }
 
 func (g *glox) Report(line int, where, message string) {

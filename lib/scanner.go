@@ -33,7 +33,7 @@ type scanner struct {
 }
 
 type Scanner interface {
-	ScanTokens()
+	ScanTokens() []Token
 	isAtEnd() bool
 }
 
@@ -42,7 +42,7 @@ func NewScanner(source string, glx Glox) Scanner {
 	return &scanner{source, list, 0, 0, 1, glx}
 }
 
-func (s *scanner) ScanTokens() {
+func (s *scanner) ScanTokens() []Token {
 	for !s.isAtEnd() {
 		s.start = s.current
 		s.scanToken()
@@ -50,6 +50,7 @@ func (s *scanner) ScanTokens() {
 
 	t := NewToken(EOF, "", nil, s.line)
 	s.tokens = append(s.tokens, t)
+	return s.tokens
 }
 
 func (s *scanner) isAtEnd() bool {

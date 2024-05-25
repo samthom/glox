@@ -5,49 +5,49 @@ import "fmt"
 type TokenType string
 
 const (
-    // single-character tokens.
-    LEFT_PAREN TokenType = "("
-    RIGHT_PAREN TokenType = ")"
-    LEFT_BRACE TokenType = "{"
-    RIGHT_BRACE TokenType = "}"
-    COMMA TokenType = ","
-    DOT TokenType = "."
-    MINUS TokenType = "-"
-    PLUS TokenType = "+"
-    SEMICOLON TokenType = ";"
-    SLASH TokenType = "/"
-    STAR TokenType = "*"
+	// single-character tokens.
+	LEFT_PAREN  TokenType = "("
+	RIGHT_PAREN TokenType = ")"
+	LEFT_BRACE  TokenType = "{"
+	RIGHT_BRACE TokenType = "}"
+	COMMA       TokenType = ","
+	DOT         TokenType = "."
+	MINUS       TokenType = "-"
+	PLUS        TokenType = "+"
+	SEMICOLON   TokenType = ";"
+	SLASH       TokenType = "/"
+	STAR        TokenType = "*"
 
-    // One or two character tokens.
-    BANG TokenType = "!"
-    BANG_EQUAL TokenType = "!="
-    EQUAL TokenType = "="
-    EQUAL_EQUAL TokenType = "=="
-    GREATER TokenType = ">"
-    GREATER_EQUAL TokenType = ">="
-    LESS TokenType = "<"
-    LESS_EQUAL TokenType = "<="
+	// One or two character tokens.
+	BANG          TokenType = "!"
+	BANG_EQUAL    TokenType = "!="
+	EQUAL         TokenType = "="
+	EQUAL_EQUAL   TokenType = "=="
+	GREATER       TokenType = ">"
+	GREATER_EQUAL TokenType = ">="
+	LESS          TokenType = "<"
+	LESS_EQUAL    TokenType = "<="
 
-    IDENTIFIER TokenType = "x"
-    STRING TokenType = "\""
-    NUMBER TokenType = "0"
+	IDENTIFIER TokenType = "x"
+	STRING     TokenType = "\""
+	NUMBER     TokenType = "0"
 
-    AND TokenType = "and"
-    CLASS TokenType = "class"
-    ELSE TokenType = "else"
-    FALSE TokenType = "false"
-    FUN TokenType = "fun"
-    FOR TokenType = "for"
-    IF TokenType = "if"
-    NIL TokenType = "nil"
-    OR TokenType = "or"
-    PRINT TokenType = "print"
-    RETURN TokenType = "return"
-    SUPER TokenType = "super"
-    THIS TokenType = "this"
-    TRUE TokenType = "true"
-    VAR TokenType = "var"
-    WHILE TokenType = "while"
+	AND    TokenType = "and"
+	CLASS  TokenType = "class"
+	ELSE   TokenType = "else"
+	FALSE  TokenType = "false"
+	FUN    TokenType = "fun"
+	FOR    TokenType = "for"
+	IF     TokenType = "if"
+	NIL    TokenType = "nil"
+	OR     TokenType = "or"
+	PRINT  TokenType = "print"
+	RETURN TokenType = "return"
+	SUPER  TokenType = "super"
+	THIS   TokenType = "this"
+	TRUE   TokenType = "true"
+	VAR    TokenType = "var"
+	WHILE  TokenType = "while"
 
 	EOF TokenType = "EOF"
 )
@@ -61,11 +61,26 @@ type token struct {
 
 type Token interface {
 	ToString() string
-    Lexeme() string
+	Lexeme() string
+	Type() TokenType
+    Line() int
+	Literal() interface{}
 }
 
 func NewToken(tkntype TokenType, lexeme string, literal interface{}, line int) Token {
 	return &token{tkntype, lexeme, literal, line}
+}
+
+func (t *token) Type() TokenType {
+	return t.tkntype
+}
+
+func (t *token) Literal() interface{} {
+	return t.literal
+}
+
+func (t *token) Line() int {
+	return t.line
 }
 
 func (t *token) ToString() string {
@@ -73,5 +88,5 @@ func (t *token) ToString() string {
 }
 
 func (t *token) Lexeme() string {
-    return t.lexeme
+	return t.lexeme
 }
