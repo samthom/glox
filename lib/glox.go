@@ -8,7 +8,9 @@ import (
 )
 
 type glox struct {
-	hadError bool
+	hadRuntimeError bool
+	hadError        bool
+	interpreter     *interpreter
 }
 
 type Glox interface {
@@ -21,7 +23,7 @@ type Glox interface {
 }
 
 func NewGlox() Glox {
-	return new(glox)
+	return &glox{false, false, new(interpreter)}
 }
 
 func (g *glox) RunFile(path string) {
@@ -33,6 +35,9 @@ func (g *glox) RunFile(path string) {
 	g.Run(string(byteFormat))
 	if g.hadError {
 		os.Exit(65)
+	}
+	if g.hadRuntimeError {
+		os.Exit(70)
 	}
 }
 
@@ -57,13 +62,16 @@ func (g *glox) Run(source string) {
 
 	parser := NewParser(tokens, g)
 	expression := parser.Parse()
+	if err := g.interpreter.Interpret(expression); err != nil {
+		g.RuntimeError(err.(RuntimeError))
+	}
 
 	if g.hadError {
 		return
 	}
 
-	printer := NewPrinter()
-	fmt.Println(printer.Print(expression))
+	// printer := NewPrinter()
+	// fmt.Println(printer.Print(expression))
 }
 
 func (g *glox) Error(line int, message string) {
@@ -82,4 +90,9 @@ func (g *glox) Report(line int, where, message string) {
 	err := fmt.Errorf("[line %d] Error%s: %s", line, where, message)
 	fmt.Println(err)
 	g.hadError = true
+}
+
+func (g *glox) RuntimeError(err RuntimeError) {
+	fmt.Printf("%v\n[line %d]", err.Error(), err.token.Line())
+	g.hadRuntimeError = true
 }
